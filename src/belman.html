@@ -23,8 +23,12 @@
                 <div class="row-content">
                     <h5>Ajouter une liaison entre deux noeuds</h5>
                     <form name="data-noeud">
-                        <input name="first-node" type="text">
-                        <input name="second-node" type="text">
+                        <select name="first-node">
+                            <option value="null" disabled>--Select a Node--</option>
+                        </select>
+                        <select name="second-node">
+                            <option value="null" disabled>--Select a Node--</option>
+                        </select>
                         <input name="weight" type="text">
                         <button type="button" onclick="addEdge()">Ajouter</button>
                     </form>
@@ -32,7 +36,9 @@
                 <div class="row-content">
                     <h5>Sélectionner le sommet du graphe </h5>
                     <form name="data-node">
-                        <input name="first-node" type="text">
+                        <select name="first-node">
+                            <option value="null" disabled>--Select a Node--</option>
+                        </select>
                         <button type="button" onclick="modifie()">Ajouter</button>
                     </form>
                 </div>
@@ -97,12 +103,23 @@
              * Fonction permettant l'ajout d'un noeud dans le graph
              */
             function addNode(){
+
                 graph.sommets.push(nbNodes)
                 nbNodes+=1;
                 //On redessine le graphe et on éxécute l'algorithme
                 g = new jsgraphs.Graph(nbNodes);
                 dessiner();
                 bellmanFord(graph)
+
+                //on modifie les select en ajoutant le nouveau noeud 
+                var selects = document.querySelectorAll('select');
+                selects.forEach(element => {
+                    var option = document.createElement('option')
+                    option.appendChild(document.createTextNode(nbNodes-1))
+                    element.appendChild(option);
+                });
+
+                
             }
 
             /**
