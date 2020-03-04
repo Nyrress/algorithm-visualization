@@ -11,13 +11,13 @@
     </head>
     
     <body>
-        <h2 id="title">Algorithme de Bellman-Ford</h2>
+        <h2 id="title">Bellman-Ford algorithm</h2>
         <div id="nav">
             <div class="row">
                 <div class="row-content">
                     <h5>Ajouter un noeud</h5>
                     <form name="data-sommet">
-                        <button type="button" onclick="addNode()">Ajouter</button>
+                        <button type="button" onclick="addNode()" id="add-node">Ajouter</button>
                     </form>
                 </div>
                 <div class="row-content">
@@ -34,7 +34,6 @@
                     </form>
                 </div>
                 <div class="row-content">
-                    <h5>Sélectionner le sommet du graphe </h5>
                     <form name="data-node">
                         <select name="first-node">
                             <option value="null" disabled>--Select a Node--</option>
@@ -52,30 +51,29 @@
                 <div>
                     <p>Trace de l'algorithme </p>
                     <table class="table" id="table">
-                        <thead>
+                        <thead class="thead-dark">
                             <tr id='table-thead'>
-                                <td>Iterations</td>
-                                <td>d(n)</td>
-                                <td>d(n+1)</td>
-                                <td>d(n+2)</td>
-                                <td>d(...)</td>
+                                <th>Iterations</th>
+                                <th>d(n)</th>
+                                <th>d(n+1)</th>
+                                <th>d(n+2)</th>
+                                <th>d(...)</th>
                             </tr>
                         </thead>
-                        <tbody id='table-tbody'>
+                        <tbody class="tbody-dark" id='table-tbody'>
                         </tbody>
                     </table>
                 </div>
                 <div class='table-arcs'>
-                    <p>Arcs entre les sommets</p>
-                    <table class="table" id="table-arcs">
-                        <thead>
+                    <table class="table " id="table-arcs">
+                        <thead class="thead-dark">
                             <tr>
-                                <td>Sommet Origine</td>
-                                <td>Sommet Recepteur</td>
-                                <td>Poid</td>
+                                <th>Sommet Origine</th>
+                                <th>Sommet Recepteur</th>
+                                <th>Poid</th>
                             </tr>
                         </thead>
-                        <tbody id='table-tbody-arcs'>
+                        <tbody class="tbody-dark" id='table-tbody-arcs'>
                         </tbody>
                     </table>
                 </div>     
@@ -98,6 +96,10 @@
             var graph = {}
             graph.sommets = new Array();
             graph.arcs = new Array();
+
+            const tableHead = document.getElementById('table-thead');
+            const tableBody = document.getElementById('table-tbody');
+
 
             /**
              * Fonction permettant l'ajout d'un noeud dans le graph
@@ -180,78 +182,91 @@
             * Algorithme de Bellman-Ford
             */
             function bellmanFord(graph) {
-                    console.log(graph)
-                    reinitiliaserTab();
-
-                    const l_edges = document.getElementById('table-tbody-arcs');
-                    graph.arcs.forEach(arc => {
-                        var tr = document.createElement('tr');
-                        for(var i =0 ; i<3; i++){
-                            var td = document.createElement('td')
-                            td.appendChild(document.createTextNode(arc[i]));
-                            tr.appendChild(td);
-                        }
-                        l_edges.appendChild(tr);
-                    });
-
-                    const distances = {}
-                    const sommetsPrecedants = {}
-                    const sommets = graph.sommets;
-                    const arcs = graph.arcs;
-                    const tableHead = document.getElementById('table-thead');
-                    const tableBody = document.getElementById('table-tbody');
-                
-                    //Initialise toutes les distances à 0
-                    sommets.forEach(sommet => {
-                        //Ajoute un sommet au thead du tableau 
-                        node = document.createElement('th')
-                        node.appendChild(document.createTextNode("d("+sommet+")"))
-                        tableHead.appendChild(node);
-
-                        //Initialise les sommets à l'infinie et le sommet à 0
-                        sommetsPrecedants[sommet] = null;
-                            if(sommet == 0)
-                                distances[0] = 0;
-                            else
-                                distances[sommet] = Infinity;
-                    });
-
-                    //Boucle pour chaque itérations
-                    for(let iteration= 0; iteration< sommets.length - 1; iteration+=1){
-                        arcs.forEach(arc => {
-                            if(distances[arc[1]] > (distances[arc[0]] + arc[2]))
-                                distances[arc[1]] = distances[arc[0]] + arc[2]
-                        
-                        });
-                        //Ajout d'une ligne dans le tableau à la fin de chaque itération
-                        let tr = document.createElement('tr')
-                        let legende = document.createElement('td');
-                        legende.appendChild(document.createTextNode('Itération : '+ (iteration+1)))
-                        tr.appendChild(legende);
-                        sommets.forEach(sommet => {
-                            let td = document.createElement('td');
-                            td.appendChild(document.createTextNode(distances[sommet]))
-                            tr.appendChild(td);
-                        })
-                        tableBody.appendChild(tr);
-                    
+                    if(event.srcElement.id == "add-node"){
+                        graph.arcs = new Array();
                     }
+
+                    reinitiliaserTab(function(){
+                        const l_edges = document.getElementById('table-tbody-arcs');
+                        graph.arcs.forEach(arc => {
+                            var tr = document.createElement('tr');
+                            for(var i =0 ; i<3; i++){
+                                var td = document.createElement('td')
+                                td.appendChild(document.createTextNode(arc[i]));
+                                tr.appendChild(td);
+                            }
+                            l_edges.appendChild(tr);
+                        });
+
+                    
+                        const distances = {}
+                        const sommetsPrecedants = {}
+                        const sommets = graph.sommets;
+                        const arcs = graph.arcs;
+                    
+                        
+                
+                        //Initialise toutes les distances à 0
+                        sommets.forEach(sommet => {
+                            
+                            //Ajoute un sommet au thead du tableau 
+                            node = document.createElement('th')
+                            node.appendChild(document.createTextNode("d("+sommet+")"))
+                            tableHead.appendChild(node);
+
+                            //Initialise les sommets à l'infinie et le sommet à 0
+                            sommetsPrecedants[sommet] = null;
+                                if(sommet == 0)
+                                    distances[0] = 0;
+                                else
+                                    distances[sommet] = Infinity;
+                        });
+
+                        //Boucle pour chaque itérations
+                        for(let iteration= 0; iteration< sommets.length - 1; iteration+=1){
+                            arcs.forEach(arc => {
+                                if(distances[arc[1]] > (distances[arc[0]] + arc[2]))
+                                    distances[arc[1]] = distances[arc[0]] + arc[2]
+                        
+                            });
+                            //Ajout d'une ligne dans le tableau à la fin de chaque itération
+                            let tr = document.createElement('tr')
+                            let legende = document.createElement('td');
+                            legende.appendChild(document.createTextNode('Itération : '+ (iteration+1)))
+                            tr.appendChild(legende);
+                            sommets.forEach(sommet => {
+                                let td = document.createElement('td');
+                                td.appendChild(document.createTextNode(distances[sommet]))
+                                tr.appendChild(td);
+                            })
+                            tableBody.appendChild(tr);
+                    
+                        }
+                    });
+                    
+                    
                 
                 }
 
-                function reinitiliaserTab(){
-                    var tableHead = document.getElementById('table-thead');
-                    var tableBody = document.getElementById('table-tbody');
+                function reinitiliaserTab(_callback){
+                    var tabs = document.querySelectorAll('table')
+                    tabs.forEach(element => {
 
-                    while (tableBody.firstChild) {
-                        tableBody.removeChild(tableBody.firstChild);
-                    }
-                    while (tableHead.firstChild) {
-                        tableHead.removeChild(tableHead.firstChild);
-                    }
-                    let th = document.createElement('th');
-                    th.appendChild(document.createTextNode("Itérations"));
-                    tableHead.appendChild(th);
+                        var tableBody = element.lastElementChild;
+                        let th = document.createElement('th');
+
+                        while (tableBody.firstChild) {
+                            tableBody.removeChild(tableBody.firstChild);
+                        }
+                        if(element.id != "table-arcs"){
+                            while (tableHead.firstChild) {
+                                tableHead.removeChild(tableHead.firstChild);
+                            }
+                            th.appendChild(document.createTextNode("Itérations"));
+                            tableHead.appendChild(th);
+                        }
+                    })
+                    _callback();
                 }
         </script>
     </body>
