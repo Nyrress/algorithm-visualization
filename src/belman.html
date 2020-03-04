@@ -3,6 +3,7 @@
         <title>
             Bellman-Ford
         </title>
+        <meta author content="Vivien Gontier / Théo Carel">
         <!--Local CSS import-->
         <link href="css/vis.css" type="text/css" />
         <link rel="stylesheet" href="css/index.css" type="text/css" />
@@ -33,14 +34,6 @@
                         <button type="button" onclick="addEdge()">Ajouter</button>
                     </form>
                 </div>
-                <div class="row-content">
-                    <form name="data-node">
-                        <select name="first-node">
-                            <option value="null" disabled>--Select a Node--</option>
-                        </select>
-                        <button type="button" onclick="modifie()">Ajouter</button>
-                    </form>
-                </div>
             </div>
             
         </div>
@@ -49,11 +42,10 @@
             <div class="row-content" id="mynetwork"></div>
             <div class="row-content"id="tableau">
                 <div>
-                    <p>Trace de l'algorithme </p>
                     <table class="table" id="table">
                         <thead class="thead-dark">
                             <tr id='table-thead'>
-                                <th>Iterations</th>
+                                <th>Itération(s)</th>
                                 <th>d(n)</th>
                                 <th>d(n+1)</th>
                                 <th>d(n+2)</th>
@@ -68,8 +60,7 @@
                     <table class="table " id="table-arcs">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Sommet Origine</th>
-                                <th>Sommet Recepteur</th>
+                                <th>Arc(s)</th>
                                 <th>Poid</th>
                             </tr>
                         </thead>
@@ -92,7 +83,7 @@
         <script type="text/javascript">
             //Initialisation
             var nbNodes = 0;
-            var g = new jsgraphs.Graph(nbNodes);
+            var g = new jsgraphs.WeightedGraph(nbNodes);
             var graph = {}
             graph.sommets = new Array();
             graph.arcs = new Array();
@@ -109,7 +100,7 @@
                 graph.sommets.push(nbNodes)
                 nbNodes+=1;
                 //On redessine le graphe et on éxécute l'algorithme
-                g = new jsgraphs.Graph(nbNodes);
+                g = new jsgraphs.WeightedDiGraph(nbNodes);
                 dessiner();
                 bellmanFord(graph)
 
@@ -136,7 +127,7 @@
                 graph.arcs.push([parseInt(noeud1),parseInt(noeud2),parseInt(weight)]);
 
                 //On redessine le graphe et on éxécute l'algorithme
-                g.addEdge(noeud1,noeud2);
+                g.addEdge(new jsgraphs.Edge(noeud1,noeud2, weight));
                 dessiner()
                 bellmanFord(graph)
             }
@@ -147,8 +138,9 @@
             function dessiner(){
                 var l_noeuds = [];
                 var l_arcs = [];
+
                 for(var v=0; v < g.V; ++v){
-                    g.node(v).label = v; // assigne à chaque noeud son numéro comme label
+                    g.node(v).label = "N : " + v; // assigne à chaque noeud son numéro comme label
                     l_noeuds.push({
                         id: v,
                         label: g.node(v).label
@@ -156,14 +148,18 @@
                     
                     var adj_v = g.adj(v);
                     for(var i = 0; i < adj_v.length; ++i) {
-                        var w = adj_v[i];
-                        //if(w > v) continue; // make sure only one edge between w and v since the graph is undirected
+                        var e = adj_v[i]
+                        var w = e.other(v)
                         l_arcs.push({
                             from: v,
-                            to: w
+                            to: w,
+                            length : e.weight,
+                            label : '' + e.weight,
+                            arrows : 'to'
                         });
                     };
                 }
+
                 //Création des noeuds
                 var noeuds = new vis.DataSet(l_noeuds);
                 // Création des arcs
@@ -182,6 +178,7 @@
             * Algorithme de Bellman-Ford
             */
             function bellmanFord(graph) {
+                console.log(graph)
                     if(event.srcElement.id == "add-node"){
                         graph.arcs = new Array();
                     }
@@ -190,9 +187,12 @@
                         const l_edges = document.getElementById('table-tbody-arcs');
                         graph.arcs.forEach(arc => {
                             var tr = document.createElement('tr');
-                            for(var i =0 ; i<3; i++){
+                            for(var i =0 ; i<2; i++){
                                 var td = document.createElement('td')
-                                td.appendChild(document.createTextNode(arc[i]));
+                                if(i==0)
+                                    td.appendChild(document.createTextNode(arc[0]+ " --> " +arc[1]));
+                                else 
+                                    td.appendChild(document.createTextNode(arc[2]));
                                 tr.appendChild(td);
                             }
                             l_edges.appendChild(tr);
@@ -244,10 +244,9 @@
                         }
                     });
                     
-                    
-                
                 }
 
+                //Reinitilise les tableaux après l'ajout d'un noeud ou d'un arc
                 function reinitiliaserTab(_callback){
                     var tabs = document.querySelectorAll('table')
                     tabs.forEach(element => {
@@ -269,5 +268,6 @@
                     _callback();
                 }
         </script>
+        
     </body>
 </html>
