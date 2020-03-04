@@ -2,7 +2,7 @@
 
 algorithm-visualization is a Javascript project using the jsgraph library for showing how work the belman-ford and dijkstra algorithm.
 
-## Installation
+## Utilisation 
 
 Open directly one of the both HTML files in your favorite browser
 
