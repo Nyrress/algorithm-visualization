@@ -7,8 +7,8 @@ algorithm-visualization is a Javascript project using the jsgraph library for sh
 Open directly one of the both HTML files in your favorite browser
 
 ## Authors
-Vivien Gontier
-Théo Carel
+- Vivien Gontier
+- Théo Carel
 
 ## License
-[MIT](https://github.com/Nyrress/algorithm-visualization/blob/master/README.md)
+[MIT](https://github.com/Nyrress/algorithm-visualization/blob/master/LICENSE)
