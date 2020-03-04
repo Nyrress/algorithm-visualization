@@ -1,0 +1,70 @@
+@borderColor : rgba(0, 0, 0, 0.26);
+
+body,html {
+    margin : 0;
+    padding : 0;
+    font-family : Calibri, 'Trebuchet MS', sans-serif;
+    background :  linear-gradient(rgb(241, 105, 105),rgb(202, 172, 108));
+}
+body {
+    
+    #title {
+        margin-top : 2%;
+        padding-bottom:  2%;
+        text-align : center;
+        border-bottom : 1px solid @borderColor;
+    }
+    #nav {
+        padding : 2%;
+        border-bottom: 1px solid @borderColor;
+        transition-duration: 0.5s;
+
+        input {
+            font-size: 80%;
+            height: 20px;
+            border-radius: 7px;
+        }
+        &:hover{
+            transition-duration: 0.5s;
+            transform : scale(1.03)
+        }
+    }
+
+    .row {
+        display: flex;
+        text-align: center;
+
+        .row-content {
+            flex : 1;
+
+            .table-arcs {
+                margin-top : 20%
+            }
+        }
+
+        #mynetwork {
+            height: auto;
+            border-right : 1px solid rgba(0, 0, 0, 0.26);
+        }
+    }
+}
+
+
+
+input, select,tr,td,thead {
+    text-align: center;
+}
+
+button {
+    border-radius : 10px !important;
+    border : none;
+    background : linear-gradient(rgb(58, 116, 71),rgb(28, 230, 45));
+    color : white;
+}
+
+
+
+
+
+
+
